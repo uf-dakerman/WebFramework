@@ -1,0 +1,58 @@
+{
+    "js": [
+        "js/main.js",
+        "js/config.js",
+		"js/ui.js",
+        "../../lib/sb-admin-v2/vendor/jquery/jquery.min.js",
+        "../../lib/sb-admin-v2/vendor/bootstrap/js/bootstrap.min.js",
+		"lib/spin.js",
+		"../../lib/sb-admin-v2/vendor/metisMenu/metisMenu.min.js",
+		"../../lib/sb-admin-v2/dist/js/sb-admin-2.min.js"
+    ],
+
+    "css": [
+        "css/main.css",
+        "../../lib/sb-admin-v2/vendor/bootstrap/css/bootstrap.min.css",
+        "../../lib/sb-admin-v2/vendor/font-awesome/css/font-awesome.min.css",
+		"../../lib/sb-admin-v2/dist/css/sb-admin-2.min.css",
+		"../../lib/sb-admin-v2/vendor/metisMenu/metisMenu.min.css"
+    ],
+
+    "layout": "app_main.html",
+    "entryPoint": "APP_SBADMIN2",
+
+    "routes": {
+        "home" : {
+            "dsp": "BASIC_HOME"
+        },
+        "account" : {
+            "dsp": "APP_ACCOUNT",
+            "children": {
+                "changepassword": {
+                    "dsp": "APP_ACCOUNT_01"
+                }
+            }
+        },
+        "users" : {
+            "dsp": "APP_USERS",
+            "children": {
+                "detail" : {
+                    "dsp":          "APP_USER_DETAIL",
+                    "instanceName": "APP_USER_D"
+                },
+                "new" : {
+                    "dsp":          "APP_USER_DETAIL",
+                    "instanceName": "APP_USER_N"
+                }
+            }
+        },
+        "page01" : {
+            "dsp":          "BASIC_PAGE",
+            "instanceName": "BASIC_PAGE_01"
+        },
+        "page02" : {
+            "dsp":          "BASIC_PAGE",
+            "instanceName": "BASIC_PAGE_02"
+        }
+    }
+}
