@@ -167,8 +167,8 @@
  pointer="0" inum="0" ufocc="0" varinfo=",1,0,2,\1F\F1,0,0,0,,0,0,0,," />
 </DSC>
 <OCC>
-<DAT name="UTIMESTAMP">2017-01-26T09:43:44.00</DAT>
-<DAT name="UCOMPSTAMP">2017-01-26T09:47:20.00</DAT>
+<DAT name="UTIMESTAMP">2017-01-31T09:32:17.00</DAT>
+<DAT name="UCOMPSTAMP">2017-01-31T09:39:00.00</DAT>
 <DAT name="ULABEL">APP_MAIN</DAT>
 <DAT name="WVPOS">3</DAT>
 <DAT name="WHPOS">1</DAT>
@@ -308,7 +308,7 @@ endparams
 
 variables
 	String  vMenuMapPath
-	boolean vUseRoutes
+	Boolean vUseRoutes
 endvariables
 
 	vMenuMapPath = $concat(".\conf\menu.", pNavigationType, ".json")
@@ -413,9 +413,8 @@ endparams
 
 javascript
 
-	var config = JSON.parse(pAppConfigJson)
-
 	app.navigationType = pNavigationType;
+	var config = JSON.parse(pAppConfigJson)
 	app.config.data    = config;
 	app.baseUrl        = pBaseUrl;
 
@@ -456,6 +455,8 @@ javascript
 
 	}
 
+	app.ui.initialize();
+
 endjavascript
 
 end ;setupJS
@@ -469,16 +470,99 @@ public web
 params
 	String pMessage     : IN
 	String pDescription : IN
+	String pType        : IN ; Message Type (Error, Warning Info etc.)
 endparams
 
 	MESSAGE.DUMMY     = pMessage
 	DESCRIPTION.DUMMY = pDescription
 
 	$fieldproperties("MESSAGE_AREA.DUMMY", "style:display") = "style:display=block"
+	webactivate $instancename.formatAlert(pType) 
 
 	return 0
 
 end ;showMessage
+
+
+;---------------------------------------------------------
+; Highlight message with relevant CSS class
+; Also save Message DOM as dismissing removes it
+;---------------------------------------------------------
+weboperation formatAlert
+params
+	string pType: IN
+endparams
+
+;Note: function defined in ui.js, customize for your needs
+javascript
+	app.ui.formatAlert(pType);
+endjavascript
+
+end ; formatAlert
+
+;---------------------------------------------------------
+operation showError
+;---------------------------------------------------------
+public web
+
+params
+	String pMessage     : IN
+	String pDescription : IN
+endparams
+
+	$instancehandle-&gt;showMessage(pMessage, pDescription, "E")
+	return 0
+
+end ;showError
+
+
+;---------------------------------------------------------
+operation showWarning
+;---------------------------------------------------------
+public web
+
+params
+	String pMessage     : IN
+	String pDescription : IN
+endparams
+
+	$instancehandle-&gt;showMessage(pMessage, pDescription, "W")
+	return 0
+
+end ;showWarning
+
+
+;---------------------------------------------------------
+operation showInfo
+;---------------------------------------------------------
+public web
+
+params
+	String pMessage     : IN
+	String pDescription : IN
+endparams
+
+	$instancehandle-&gt;showMessage(pMessage, pDescription, "I")
+	return 0
+
+end ;showinfo
+
+
+
+;---------------------------------------------------------
+operation showSuccess
+;---------------------------------------------------------
+public web
+
+params
+	String pMessage     : IN
+	String pDescription : IN
+endparams
+
+	$instancehandle-&gt;showMessage(pMessage, pDescription, "S")
+	return 0
+
+end ;showSuccess
 
 
 ;---------------------------------------------------------
@@ -587,6 +671,26 @@ public web
 	return 0
 
 end ;logOff
+
+
+;---------------------------------------------------------
+; Return translated text for Javascript operations
+;---------------------------------------------------------
+operation getText
+;---------------------------------------------------------
+public web
+params
+	string pID      : IN
+	string pMessage : INOUT
+endparams
+
+	if ($textexist("%%pID%%%"))
+		pMessage = $text("%%pID%%%")
+	else
+		pMessage = ""
+	endif
+
+end ; getText
 
 
 ;---------------------------------------------------------
