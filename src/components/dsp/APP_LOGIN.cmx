@@ -167,8 +167,8 @@
  pointer="0" inum="0" ufocc="0" varinfo=",1,0,2,\1F\F1,0,0,0,,0,0,0,," />
 </DSC>
 <OCC>
-<DAT name="UTIMESTAMP">2015-10-26T15:29:16.00</DAT>
-<DAT name="UCOMPSTAMP">2015-10-26T15:29:17.00</DAT>
+<DAT name="UTIMESTAMP">2017-02-02T12:03:15.00</DAT>
+<DAT name="UCOMPSTAMP">2017-01-31T09:38:59.00</DAT>
 <DAT name="ULABEL">APP_LOGIN</DAT>
 <DAT name="WVPOS">3</DAT>
 <DAT name="WHPOS">1</DAT>
@@ -382,7 +382,7 @@ public web
 scope
 	input
 	output
-	operation &lt;MAIN_DSP&gt;.showMessage
+	operation &lt;MAIN_DSP&gt;.showError
 endscope
 
 variables
@@ -394,27 +394,27 @@ endvariables
 	;Check the provided credentials
 	call lpDoLogin(USERNAME.DUMMY, PASSWORD.DUMMY, vAuthorised, vUserId, vMessage)
 	if($status &lt; 0)
-		activate "&lt;MAIN_DSP&gt;".showMessage("Runtime Error!", $status)
+		activate "&lt;MAIN_DSP&gt;".showError("Runtime Error!", $status)
 		return 0
 	endif
 
 	;The check failed, re-present the login page to the user
 	if(!vAuthorised)
-		activate "&lt;MAIN_DSP&gt;".showMessage("Sign in failed", vMessage)
+		activate "&lt;MAIN_DSP&gt;".showError("Sign in failed", vMessage)
 		return 0
 	endif
 
 	;The credentials are valid, create a new "logged in" session
 	call lpCreateAuthenticatedSession(USERNAME.DUMMY, vUserId)
 	if($status &lt; 0)
-		activate "&lt;MAIN_DSP&gt;".showMessage("Failed to create authenticated session", $status)
+		activate "&lt;MAIN_DSP&gt;".showError("Failed to create authenticated session", $status)
 		return 0		
 	endif
 
 	;Remove the login DSP and show the main application page
 	activate "&lt;MAIN_DSP&gt;".showApplication("", "", "")
 	if($status &lt; 0)
-		activate "&lt;MAIN_DSP&gt;".showMessage("Runtime Error!", $status)
+		activate "&lt;MAIN_DSP&gt;".showError("Runtime Error!", $status)
 		return 0		
 	endif
 
